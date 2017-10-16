@@ -5,5 +5,11 @@ main: me.bobcatsss.perworldspawn.Core
 commands:
    setspawn:
       description: Allows you to set the SpawnPoint of a world.
+      permission: perworldspawn.setspawn
+      default: op
+   pws:
+      description: Reloads config file.
+      permission: perworldspawn.reload
+      default: op
    spawn:
       description: Teleport to spawn.

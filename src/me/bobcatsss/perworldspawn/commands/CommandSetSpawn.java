@@ -21,7 +21,7 @@ public class CommandSetSpawn implements CommandExecutor {
 			Player p = (Player)sender;
 			if(args.length == 0) {
 				if(p.hasPermission("perworldspawn.setspawn")) {
-					plugin.getLocations().set(p.getWorld().getName() + ".Location", p.getLocation());
+					plugin.getLocations().getConfig().set(p.getWorld().getName() + ".Location", p.getLocation());
 					plugin.saveLocations();
 					p.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("Messages.SpawnSet")).replace("%world%", p.getWorld().getName()));
 					return true;

@@ -1,74 +1,71 @@
 package me.bobcatsss.perworldspawn;
 
-import java.io.File;
-import java.io.IOException;
-
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import me.bobcatsss.perworldspawn.commands.CommandReload;
 import me.bobcatsss.perworldspawn.commands.CommandSetSpawn;
 import me.bobcatsss.perworldspawn.commands.CommandSpawn;
+import me.bobcatsss.perworldspawn.listeners.RespawnEvent;
+import me.bobcatsss.perworldspawn.listeners.WorldChangeEvent;
 
 public class Core extends JavaPlugin {
 	
-	private boolean teleportOnRespawn;
-	private File locations;
-	private FileConfiguration locs;
+	private boolean teleportOnRespawn; 
+	private boolean spawnOnWorldChange;
+	
+	LocationsConfig locations;
 	
 	public void onEnable() {
-		createWorldsFile();
 		saveDefaultConfig();
+		locations = new LocationsConfig(this, "Locations.yml");
+		loadValues();
 		registerCommands();
 		registerEvents();
 	}
 	
-	public void onDisable() {
-		
-	}
-	
 	public void registerEvents() {
-		
+		PluginManager pm = Bukkit.getPluginManager();
+		pm.registerEvents(new RespawnEvent(this), this);
+		pm.registerEvents(new WorldChangeEvent(this), this);
 	}
 	
 	public void registerCommands() {
 		getCommand("setspawn").setExecutor(new CommandSetSpawn(this));
 		getCommand("spawn").setExecutor(new CommandSpawn(this));
-	}
-	
-	public void createWorldsFile() {
-		locations = new File(getDataFolder(), "Locations.yml");
-		if(!locations.exists()) {
-			try {
-				locations.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		locs = YamlConfiguration.loadConfiguration(locations);
+		getCommand("pws").setExecutor(new CommandReload(this));
 	}
 	
 	public void saveLocations() {
-		try {
-			locs.save(locations);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		locations.save();
 	}
 	
 	public Location getLocation(String world) {
-		if(!getLocations().isConfigurationSection(world)) return null;
-		if((Location) getLocations().get(world + ".Location") == null) return null;
-		return (Location) getLocations().get(world + ".Location");
+		if(!getLocations().getConfig().isConfigurationSection(world)) return null;
+		if((Location) getLocations().getConfig().get(world + ".Location") == null) return null;
+		return (Location) getLocations().getConfig().get(world + ".Location");
 	}
 	
-	public FileConfiguration getLocations() {
-		return locs;
+	public void loadValues() {
+		if(getConfig().isConfigurationSection("Teleport-On-Respawn")) {
+			teleportOnRespawn = getConfig().getBoolean("Teleport-On-Respawn");
+		}
+		if(getConfig().isConfigurationSection("Spawn-On-World-Change")) {
+			spawnOnWorldChange = getConfig().getBoolean("Spawn-On-World-Change");
+		}
+	}
+	public LocationsConfig getLocations() {
+		return locations;
 	}
 	
-	public void reloadLocations() {
-		locs = YamlConfiguration.loadConfiguration(locations);
+	public void getSpawnOnWorldChange(boolean value) {
+		this.spawnOnWorldChange = value;
+	}
+	
+	public boolean isTeleportOnWorldChange() {
+		return this.spawnOnWorldChange;
 	}
 	
 	public void setTeleportOnRespawn(boolean value) {

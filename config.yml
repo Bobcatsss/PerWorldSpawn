@@ -1,0 +1,8 @@
+Messages:
+   NoPermission: "&cYou don't have permission to use this command."
+   Usage: "&7Usage: /setspawn."
+   SpawnSet: "&aSpawnPoint set for the world &f%world%."
+   SpawnTp: "&aYou have been teleported to spawn."
+   No-SpawnSet: "&cError: Un-able to teleport to spawn, No Spawnpoint set."
+   Spawn-Other: "&aYou have teleported &f%target% &ato spawn."
+   Player-Not-Online: "&f%target% &cis not online."

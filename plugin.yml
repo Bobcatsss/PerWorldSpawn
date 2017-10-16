@@ -1,0 +1,9 @@
+name: PerWorldSpawn
+author: bobcatsss
+version: 1.0
+main: me.bobcatsss.perworldspawn.Core
+commands:
+   setspawn:
+      description: Allows you to set the SpawnPoint of a world.
+   spawn:
+      description: Teleport to spawn.
